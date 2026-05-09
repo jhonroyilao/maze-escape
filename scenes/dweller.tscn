@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://crw8tpms05pcq"]
+
+[ext_resource type="Texture2D" uid="uid://dfia56yuxeba1" path="res://assets/Gothicvania/Characters/Grotto-escape-2-boss-dragon/spritesheets/idle.png" id="1_6gdca"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlv0e"]
+atlas = ExtResource("1_6gdca")
+region = Rect2(0, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pw0lp"]
+atlas = ExtResource("1_6gdca")
+region = Rect2(144, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_83xkl"]
+atlas = ExtResource("1_6gdca")
+region = Rect2(288, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nm4vq"]
+atlas = ExtResource("1_6gdca")
+region = Rect2(432, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r01iv"]
+atlas = ExtResource("1_6gdca")
+region = Rect2(576, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hi2dd"]
+atlas = ExtResource("1_6gdca")
+region = Rect2(720, 0, 144, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_eopx3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hlv0e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pw0lp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_83xkl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nm4vq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r01iv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hi2dd")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6gdca"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hlv0e"]
+radius = 154.61
+
+[node name="dweller" type="CharacterBody2D" unique_id=1677826843]
+motion_mode = 1
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1075517130]
+position = Vector2(-11, -33)
+sprite_frames = SubResource("SpriteFrames_eopx3")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.90124446
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637340170]
+position = Vector2(9, -6)
+shape = SubResource("CircleShape2D_6gdca")
+debug_color = Color(0.9987412, 0, 0.14602458, 0.41960785)
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=213681136]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1342592453]
+position = Vector2(6, -17)
+shape = SubResource("CircleShape2D_hlv0e")
