@@ -1,248 +1,337 @@
 extends CharacterBody2D
 
-# ------------------------------------
-# STATES
-# ------------------------------------
-enum State { PATROL, CHASE, SEARCH, CAMP_INVESTIGATION }
+enum State {
+	PATROL,
+	CHASE,
+	SEARCH,
+	CAMP_INVESTIGATION
+}
+
 var current_state: State = State.PATROL
 
-# ------------------------------------
-# SETTINGS
-# ------------------------------------
-var base_speed := 80.0
-var speed := base_speed
-var detection_radius := 9999.0
-var search_duration := 5.0
-var patrol_wait_time := 1.5
+var attack_radius := 10.0
 
-# ------------------------------------
-# REFERENCES
-# ------------------------------------
+var base_speed := 60.0
+var speed := base_speed
+
+var detection_radius := 180.0
+var search_duration := 8.0
+
 @onready var anim := $AnimatedSprite2D
 @onready var detection_area := $DetectionArea
+@onready var debug_label := $Label
+
 var player: CharacterBody2D = null
 var tilemap: TileMap = null
 
-# ------------------------------------
-# A* GRID
-# ------------------------------------
 var astar := AStarGrid2D.new()
+
 var cell_size := Vector2(16, 16)
 var maze_rect := Rect2i(0, 0, 59, 42)
 
-# ------------------------------------
-# RUNTIME VARS
-# ------------------------------------
 var path: Array[Vector2] = []
 var path_index := 0
 
+var player_in_sight := false
 var last_known_player_pos := Vector2.ZERO
 var search_timer := 0.0
 
-var camp_target: Vector2 = Vector2.INF
 var patrol_points: Array[Vector2] = []
 var patrol_index := 0
-var patrol_wait_timer := 0.0
-var is_waiting_at_patrol := false
 
 var repath_timer := 0.0
+
+var wander_timer := 0.0
+var wander_interval := 3.0
+
 var debug_timer := 0.0
+var stuck_timer := 0.0
+var last_position := Vector2.ZERO
+var stuck_threshold := 4.0
 
-# ------------------------------------
-# NIGHT MODE
-# ------------------------------------
-var is_night := false
 
-# ===========================================================
+# =========================================================
 # READY
-# ===========================================================
+# =========================================================
 func _ready():
+
 	tilemap = get_parent().get_node("TileMap")
 	player = get_parent().get_node("Player")
 
 	_build_astar()
-	_generate_patrol_points(6)
+	_generate_patrol_points(8)
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
 
 	anim.play("idle")
 
-	print("Dweller position: ", global_position)
-	print("Player found: ", player)
+	last_position = global_position
 
-# ===========================================================
-# PHYSICS LOOP
-# ===========================================================
-func _physics_process(delta: float):
-	velocity.y = 0
-	debug_timer += delta
-	if debug_timer >= 1.0:
-		debug_timer = 0.0
-		print("State: ", current_state, " | Velocity: ", velocity, " | Path size: ", path.size(), " | Path index: ", path_index)
+	print("[DWELLER] AI INITIALIZED")
+	print("[DWELLER] Position: ", global_position)
+
+	await get_tree().process_frame
+
+	_start_patrol()
+
+
+# =========================================================
+# MAIN LOOP
+# =========================================================
+func _physics_process(delta):
+
+	velocity = Vector2.ZERO
 
 	_check_player_visibility()
-	_apply_day_night()
 	_run_behavior(delta)
 	_move_along_path()
 	_update_animation()
+	_debug_tick(delta)
 
-# ===========================================================
-# ALWAYS LOOK FOR PLAYER
-# ===========================================================
-func _check_player_visibility():
-	if player == null:
-		return
-	var dist = global_position.distance_to(player.global_position)
-	if dist <= detection_radius:
-		if current_state != State.CHASE:
-			print("SWITCHING TO CHASE — dist: ", dist)
-			current_state = State.CHASE
-			path.clear()
-			_set_path_to(player.global_position)
-	else:
-		if current_state == State.CHASE:
-			print("Player out of range — SEARCH")
-			last_known_player_pos = player.global_position
-			search_timer = search_duration
-			current_state = State.SEARCH
-			path.clear()
 
-# ===========================================================
-# DAY / NIGHT
-# ===========================================================
-func _apply_day_night():
-	if is_night:
-		speed = base_speed * 1.6
-	else:
-		speed = base_speed
+# =========================================================
+# FSM
+# =========================================================
+func _run_behavior(delta):
 
-# ===========================================================
-# RULE-BASED BEHAVIOR FSM
-# ===========================================================
-func _run_behavior(delta: float):
 	match current_state:
 
 		State.CHASE:
-			if player:
-				repath_timer += delta
-				if repath_timer >= 0.3:
-					repath_timer = 0.0
+
+			repath_timer += delta
+
+			if repath_timer >= 0.4:
+
+				repath_timer = 0.0
+
+				if player_in_sight and player:
 					_set_path_to(player.global_position)
-				last_known_player_pos = player.global_position
+
 
 		State.SEARCH:
+
 			search_timer -= delta
-			if search_timer <= 0.0:
+
+			if search_timer <= 0:
+
+				print("[DWELLER] Search expired -> PATROL")
+
 				current_state = State.PATROL
+
 				path.clear()
-				_next_patrol_point()
-			else:
-				if path.is_empty():
-					_set_path_to(last_known_player_pos)
-				if _reached_target(last_known_player_pos):
-					velocity = Vector2.ZERO
+				path_index = 0
+
+				_advance_patrol()
+
+				return
+
+			if _path_exhausted():
+
+				var offset = Vector2(
+					randf_range(-64, 64),
+					randf_range(-64, 64)
+				)
+
+				_set_path_to(last_known_player_pos + offset)
+
 
 		State.CAMP_INVESTIGATION:
-			if camp_target != Vector2.INF:
-				if path.is_empty():
-					_set_path_to(camp_target)
-				if _reached_target(camp_target):
-					camp_target = Vector2.INF
-					current_state = State.PATROL
-					path.clear()
-					_next_patrol_point()
+			pass
+
 
 		State.PATROL:
-			if is_waiting_at_patrol:
-				patrol_wait_timer -= delta
-				velocity = Vector2.ZERO
-				if patrol_wait_timer <= 0.0:
-					is_waiting_at_patrol = false
-					_next_patrol_point()
-			else:
-				if patrol_points.is_empty():
-					return
-				var pt = patrol_points[patrol_index]
-				if path.is_empty():
-					_set_path_to(pt)
-				if _reached_target(pt):
-					is_waiting_at_patrol = true
-					patrol_wait_timer = patrol_wait_time
-					path.clear()
 
-# ===========================================================
-# DETECTION SIGNALS
-# ===========================================================
-func _on_body_entered(body: Node2D):
-	if body.name == "Player":
-		current_state = State.CHASE
-		path.clear()
-		_set_path_to(player.global_position)
+			wander_timer += delta
 
-func _on_body_exited(body: Node2D):
-	if body.name == "Player":
-		if current_state == State.CHASE:
-			last_known_player_pos = player.global_position
-			search_timer = search_duration
-			current_state = State.SEARCH
+			if _path_exhausted():
+
+				wander_timer = 0.0
+				_advance_patrol()
+
+			elif wander_timer >= wander_interval:
+
+				wander_timer = 0.0
+
+				print("[DWELLER] Wander timeout -> repath")
+
+				path.clear()
+				path_index = 0
+
+				_advance_patrol()
+
+
+# =========================================================
+# PATH CHECK
+# =========================================================
+func _path_exhausted() -> bool:
+
+	return path.is_empty() or path_index >= path.size()
+
+
+# =========================================================
+# ADVANCE PATROL
+# =========================================================
+func _advance_patrol():
+
+	if patrol_points.is_empty():
+		return
+
+	for i in range(patrol_points.size()):
+
+		patrol_index = (patrol_index + 1) % patrol_points.size()
+
+		var target = patrol_points[patrol_index]
+
+		_set_path_to(target)
+
+		if not _path_exhausted():
+
+			print("[DWELLER] Patrol -> ", patrol_index)
+			return
+
+	print("[DWELLER] All patrol points failed")
+
+	_generate_patrol_points(8)
+
+	if not patrol_points.is_empty():
+		_set_path_to(patrol_points[0])
+
+
+# =========================================================
+# PLAYER DETECTION
+# =========================================================
+func _check_player_visibility():
+
+	if player == null:
+		return
+
+	var dist = global_position.distance_to(player.global_position)
+
+	if dist <= detection_radius:
+
+		if not player_in_sight:
+
+			player_in_sight = true
+
+			print("[DWELLER] PLAYER SPOTTED")
+
 			path.clear()
+			path_index = 0
 
-func notify_camp_activated(camp_world_pos: Vector2):
-	if current_state != State.CHASE:
-		camp_target = camp_world_pos
-		current_state = State.CAMP_INVESTIGATION
+			current_state = State.CHASE
+
+	else:
+
+		if player_in_sight:
+
+			player_in_sight = false
+
+			print("[DWELLER] PLAYER LOST")
+
+			if current_state == State.CHASE:
+
+				last_known_player_pos = player.global_position
+
+				search_timer = search_duration
+
+				current_state = State.SEARCH
+
+				path.clear()
+				path_index = 0
+
+
+# =========================================================
+# SIGNALS
+# =========================================================
+func _on_body_entered(body):
+
+	if body.name == "Player":
+
+		print("[DWELLER] Player entered detection")
+
+		player_in_sight = true
+
 		path.clear()
-		_set_path_to(camp_target)
+		path_index = 0
 
-# ===========================================================
-# A* PATHFINDING
-# ===========================================================
+		current_state = State.CHASE
+
+
+func _on_body_exited(body):
+
+	if body.name == "Player":
+
+		print("[DWELLER] Player exited detection")
+
+		player_in_sight = false
+
+		if current_state == State.CHASE:
+
+			last_known_player_pos = player.global_position
+
+			search_timer = search_duration
+
+			current_state = State.SEARCH
+
+			path.clear()
+			path_index = 0
+
+
+# =========================================================
+# ASTAR
+# =========================================================
 func _build_astar():
+
 	astar.region = maze_rect
 	astar.cell_size = cell_size
+
 	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+
 	astar.update()
 
-	var solid_count = 0
-	var open_count = 0
+	var solid_count := 0
+
 	for x in range(maze_rect.size.x):
+
 		for y in range(maze_rect.size.y):
+
 			var cell = Vector2i(x, y)
+
 			var tile_data = tilemap.get_cell_tile_data(0, cell)
-			if tile_data == null:
-				open_count += 1
-			elif tile_data.get_collision_polygons_count(0) > 0:
-				astar.set_point_solid(cell, true)
-				solid_count += 1
-			else:
-				open_count += 1
-	print("A* built — solid: ", solid_count, " open: ", open_count)
 
-func _find_nearest_walkable(cell: Vector2i) -> Vector2i:
-	for radius in range(1, 6):
-		for dx in range(-radius, radius + 1):
-			for dy in range(-radius, radius + 1):
-				var nearby = cell + Vector2i(dx, dy)
-				var clamped = nearby.clamp(
-					maze_rect.position,
-					maze_rect.position + maze_rect.size - Vector2i(1, 1)
-				)
-				if not astar.is_point_solid(clamped):
-					return clamped
-	return cell
+			if tile_data:
 
+				if tile_data.get_collision_polygons_count(0) > 0:
+
+					astar.set_point_solid(cell, true)
+
+					solid_count += 1
+
+	print("[DWELLER] ASTAR READY | solids: ", solid_count)
+
+
+# =========================================================
+# PATHFINDING
+# =========================================================
 func _set_path_to(world_target: Vector2):
-	var from_cell = tilemap.local_to_map(tilemap.to_local(global_position))
-	var to_cell = tilemap.local_to_map(tilemap.to_local(world_target))
+
+	var from_cell = tilemap.local_to_map(
+		tilemap.to_local(global_position)
+	)
+
+	var to_cell = tilemap.local_to_map(
+		tilemap.to_local(world_target)
+	)
 
 	from_cell = from_cell.clamp(
 		maze_rect.position,
-		maze_rect.position + maze_rect.size - Vector2i(1, 1)
+		maze_rect.position + maze_rect.size - Vector2i.ONE
 	)
+
 	to_cell = to_cell.clamp(
 		maze_rect.position,
-		maze_rect.position + maze_rect.size - Vector2i(1, 1)
+		maze_rect.position + maze_rect.size - Vector2i.ONE
 	)
 
 	if astar.is_point_solid(from_cell):
@@ -252,75 +341,248 @@ func _set_path_to(world_target: Vector2):
 		to_cell = _find_nearest_walkable(to_cell)
 
 	var raw_path = astar.get_point_path(from_cell, to_cell)
+
 	if raw_path.is_empty():
+
+		print("[DWELLER] NO PATH")
+
+		path.clear()
+		path_index = 0
+
 		return
 
 	path.clear()
 	path_index = 0
 
-	for cell in raw_path:
-		var world_pos = tilemap.to_global(tilemap.map_to_local(Vector2i(cell)))
-		path.append(world_pos)
+	# AStarGrid2D already returns world positions
+	for point in raw_path:
+		path.append(point)
 
-	print("Path generated: ", path.size(), " steps")
+	print("[DWELLER] Path created: ", path.size(), " nodes")
 
+
+# =========================================================
+# WALKABLE CELL
+# =========================================================
+func _find_nearest_walkable(cell: Vector2i) -> Vector2i:
+
+	for radius in range(1, 5):
+
+		for dx in range(-radius, radius + 1):
+
+			for dy in range(-radius, radius + 1):
+
+				var check = cell + Vector2i(dx, dy)
+
+				if astar.is_in_boundsv(check):
+
+					if not astar.is_point_solid(check):
+						return check
+
+	return cell
+
+
+# =========================================================
+# MOVEMENT
+# =========================================================
 func _move_along_path():
-	if path.is_empty() or path_index >= path.size():
-		velocity = Vector2.ZERO
+
+	if _path_exhausted():
+
+		move_and_slide()
+		return
+
+	# Skip close waypoints
+	while path_index < path.size():
+
+		if global_position.distance_to(path[path_index]) < 10.0:
+			path_index += 1
+		else:
+			break
+
+	if _path_exhausted():
+
 		move_and_slide()
 		return
 
 	var target = path[path_index]
-	var dist = global_position.distance_to(target)
-	
-	# Force advance if stuck on this waypoint too long
-	if dist < 12.0 or dist > 200.0:
-		path_index += 1
-		if path_index >= path.size():
-			path.clear()
-			return
 
-	target = path[path_index]
-	var direction = (target - global_position).normalized()
-	velocity = direction * speed
+	var dir = target - global_position
+
+	var move_dir = Vector2.ZERO
+
+	# PRIORITY AXIS MOVEMENT
+	if abs(dir.x) > abs(dir.y):
+
+		move_dir = Vector2(sign(dir.x), 0)
+
+		# If blocked horizontally, try vertical
+		if test_move(transform, move_dir * 2):
+
+			move_dir = Vector2(0, sign(dir.y))
+
+	else:
+
+		move_dir = Vector2(0, sign(dir.y))
+
+		# If blocked vertically, try horizontal
+		if test_move(transform, move_dir * 2):
+
+			move_dir = Vector2(sign(dir.x), 0)
+
+	velocity = move_dir * speed
+
 	move_and_slide()
 
-func _reached_target(world_pos: Vector2) -> bool:
-	return global_position.distance_to(world_pos) < 16.0
 
-# ===========================================================
-# PATROL
-# ===========================================================
+# =========================================================
+# PATROL POINTS
+# =========================================================
 func _generate_patrol_points(count: int):
-	var my_cell = tilemap.local_to_map(tilemap.to_local(global_position))
-	print("Dweller cell: ", my_cell, " is solid: ", astar.is_point_solid(my_cell))
 
-	var walkable: Array[Vector2] = []
+	patrol_points.clear()
+
+	var walkable: Array[Vector2i] = []
+
 	for x in range(maze_rect.size.x):
+
 		for y in range(maze_rect.size.y):
+
 			var cell = Vector2i(x, y)
-			if not astar.is_point_solid(cell):
-				walkable.append(tilemap.to_global(tilemap.map_to_local(cell)))
 
-	print("Walkable tiles found: ", walkable.size())
+			if astar.is_in_boundsv(cell):
+
+				if not astar.is_point_solid(cell):
+					walkable.append(cell)
+
 	walkable.shuffle()
-	for i in range(min(count, walkable.size())):
-		patrol_points.append(walkable[i])
 
-	if not patrol_points.is_empty():
-		_set_path_to(patrol_points[0])
+	var origin = tilemap.local_to_map(
+		tilemap.to_local(global_position)
+	)
 
-func _next_patrol_point():
+	if astar.is_point_solid(origin):
+		origin = _find_nearest_walkable(origin)
+
+	var checked := 0
+
+	for cell in walkable:
+
+		if patrol_points.size() >= count:
+			break
+
+		checked += 1
+
+		var test = astar.get_point_path(origin, cell)
+
+		if test.size() > 0:
+
+			patrol_points.append(
+				tilemap.to_global(
+					tilemap.map_to_local(cell)
+				)
+			)
+
+		if checked >= 60:
+			break
+
+	print("[DWELLER] Patrol points: ", patrol_points.size())
+
+
+# =========================================================
+# START PATROL
+# =========================================================
+func _start_patrol():
+
 	if patrol_points.is_empty():
-		return
-	patrol_index = (patrol_index + 1) % patrol_points.size()
-	_set_path_to(patrol_points[patrol_index])
 
-# ===========================================================
+		print("[DWELLER] NO PATROL POINTS")
+		return
+
+	patrol_index = 0
+
+	print("[DWELLER] START PATROL")
+
+	_set_path_to(patrol_points[0])
+
+
+# =========================================================
+# DEBUG
+# =========================================================
+func _debug_tick(delta):
+
+	debug_timer += delta
+	stuck_timer += delta
+
+	if debug_timer >= 2.0:
+
+		debug_timer = 0.0
+
+		var state_name = State.keys()[current_state]
+
+		print("--------------------------------")
+		print("[DWELLER] STATE: ", state_name)
+		print("[DWELLER] POS: ", global_position)
+		print("[DWELLER] PATH: ", path_index, "/", path.size())
+
+		if not _path_exhausted():
+
+			print(
+				"[DWELLER] TARGET: ",
+				path[path_index],
+				" | DIST: ",
+				global_position.distance_to(path[path_index])
+			)
+
+		if debug_label:
+
+			debug_label.text = "[%s]\n%d/%d" % [
+				state_name,
+				path_index,
+				path.size()
+			]
+
+	if stuck_timer >= stuck_threshold:
+
+		stuck_timer = 0.0
+
+		var moved = global_position.distance_to(last_position)
+
+		if moved < 5.0:
+
+			print("[DWELLER] STUCK -> REPATH")
+
+			path.clear()
+			path_index = 0
+
+			match current_state:
+
+				State.CHASE:
+
+					if player:
+						_set_path_to(player.global_position)
+
+				State.SEARCH:
+
+					var offset = Vector2(
+						randf_range(-64, 64),
+						randf_range(-64, 64)
+					)
+
+					_set_path_to(last_known_player_pos + offset)
+
+				State.PATROL:
+					_advance_patrol()
+
+		last_position = global_position
+
+
+# =========================================================
 # ANIMATION
-# ===========================================================
+# =========================================================
 func _update_animation():
-	if velocity.length() > 0:
-		anim.play("idle")
+
+	if velocity.length() > 5:
+		anim.play("run")
 	else:
 		anim.play("idle")
