@@ -1,79 +1,88 @@
 [gd_scene format=3 uid="uid://crw8tpms05pcq"]
 
-[ext_resource type="Texture2D" uid="uid://dfia56yuxeba1" path="res://assets/Gothicvania/Characters/Grotto-escape-2-boss-dragon/spritesheets/idle.png" id="1_6gdca"]
+[ext_resource type="Texture2D" uid="uid://o5xg2wkhjbeu" path="res://assets/Gothicvania/Characters/Grotto-escape-2-boss-dragon/spritesheets/breath.png" id="2_hlv0e"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hlv0e"]
-atlas = ExtResource("1_6gdca")
+[sub_resource type="AtlasTexture" id="AtlasTexture_eopx3"]
+atlas = ExtResource("2_hlv0e")
 region = Rect2(0, 0, 144, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pw0lp"]
-atlas = ExtResource("1_6gdca")
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsybs"]
+atlas = ExtResource("2_hlv0e")
 region = Rect2(144, 0, 144, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_83xkl"]
-atlas = ExtResource("1_6gdca")
+[sub_resource type="AtlasTexture" id="AtlasTexture_eayi1"]
+atlas = ExtResource("2_hlv0e")
 region = Rect2(288, 0, 144, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_nm4vq"]
-atlas = ExtResource("1_6gdca")
+[sub_resource type="AtlasTexture" id="AtlasTexture_tgrgr"]
+atlas = ExtResource("2_hlv0e")
 region = Rect2(432, 0, 144, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_r01iv"]
-atlas = ExtResource("1_6gdca")
+[sub_resource type="AtlasTexture" id="AtlasTexture_5w24s"]
+atlas = ExtResource("2_hlv0e")
 region = Rect2(576, 0, 144, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hi2dd"]
-atlas = ExtResource("1_6gdca")
+[sub_resource type="AtlasTexture" id="AtlasTexture_e030x"]
+atlas = ExtResource("2_hlv0e")
 region = Rect2(720, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l44ti"]
+atlas = ExtResource("2_hlv0e")
+region = Rect2(864, 0, 144, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_eopx3"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_hlv0e")
+"texture": SubResource("AtlasTexture_eopx3")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pw0lp")
+"texture": SubResource("AtlasTexture_gsybs")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_83xkl")
+"texture": SubResource("AtlasTexture_eayi1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_nm4vq")
+"texture": SubResource("AtlasTexture_tgrgr")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_r01iv")
+"texture": SubResource("AtlasTexture_5w24s")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_hi2dd")
+"texture": SubResource("AtlasTexture_e030x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l44ti")
 }],
 "loop": true,
-"name": &"idle",
-"speed": 6.0
+"name": &"run",
+"speed": 3.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_6gdca"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6gdca"]
+size = Vector2(6, 6)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hlv0e"]
 radius = 154.61
 
 [node name="dweller" type="CharacterBody2D" unique_id=1677826843]
 motion_mode = 1
+safe_margin = 0.01
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1075517130]
 position = Vector2(-11, -33)
 sprite_frames = SubResource("SpriteFrames_eopx3")
-animation = &"idle"
-autoplay = "idle"
-frame_progress = 0.90124446
+animation = &"run"
+autoplay = "run"
+frame_progress = 0.25395894
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637340170]
-position = Vector2(9, -6)
-shape = SubResource("CircleShape2D_6gdca")
+position = Vector2(8, -19)
+shape = SubResource("RectangleShape2D_6gdca")
 debug_color = Color(0.9987412, 0, 0.14602458, 0.41960785)
 
 [node name="DetectionArea" type="Area2D" parent="." unique_id=213681136]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1342592453]
-position = Vector2(6, -17)
+position = Vector2(8, -18)
 shape = SubResource("CircleShape2D_hlv0e")
