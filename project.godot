@@ -13,7 +13,6 @@ config_version=5
 config/name="Maze-Escape"
 run/main_scene="uid://4lsf8rh4yjtj"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
 
 [physics]
 
