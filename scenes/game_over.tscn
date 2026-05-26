@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://herdf118mh8p" path="res://scripts/gameover.gd" id="1_xeevv"]
 [ext_resource type="Texture2D" uid="uid://chy0kn3yli6g4" path="res://assets/customUI/GAME OVER.png" id="2_wqhvx"]
+[ext_resource type="Texture2D" uid="uid://bbqkus465gsax" path="res://assets/customUI/go_button.png" id="3_tbwuq"]
 
 [node name="GameOver" type="Control" unique_id=703333741]
 custom_minimum_size = Vector2(1152, 648)
@@ -18,3 +19,15 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("2_wqhvx")
 expand_mode = 2
+
+[node name="Button" type="Button" parent="." unique_id=1527101664]
+custom_minimum_size = Vector2(407.46, 79.31)
+layout_mode = 0
+offset_left = 352.0
+offset_top = 380.00003
+offset_right = 1595.0
+offset_bottom = 633.00006
+scale = Vector2(0.38053757, 0.38053757)
+icon = ExtResource("3_tbwuq")
+
+[connection signal="pressed" from="Button" to="." method="_on_play_again_pressed"]
