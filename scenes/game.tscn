@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://byx26idrjgnlp"]
 
+[ext_resource type="Texture2D" uid="uid://n6ut8bsc0npl" path="res://assets/1MAIN TILESET/Dungeon_Tileset.png" id="1_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://ck6tk6ri7gkj2" path="res://scenes/player.tscn" id="1_uwrxv"]
-[ext_resource type="Texture2D" uid="uid://n6ut8bsc0npl" path="res://assets/character and tileset/Dungeon_Tileset.png" id="2_lnu2h"]
+[ext_resource type="Texture2D" uid="uid://cr6je1wm4conh" path="res://assets/1MAIN TILESET/demonstration.png" id="2_vtaks"]
 [ext_resource type="Texture2D" uid="uid://bcd1vojxsv568" path="res://assets/Gothicvania/Environments/Old-dark-Castle-tileset-Files/PNG/old-dark-castle-interior-tileset.png" id="3_iywne"]
-[ext_resource type="Texture2D" uid="uid://cr6je1wm4conh" path="res://assets/character and tileset/demonstration.png" id="3_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://dsujexj500bd4" path="res://assets/Gothicvania/Misc/tiles/all-rock-tiles.png" id="4_p57ef"]
 [ext_resource type="Texture2D" uid="uid://pd0qrqp0xumn" path="res://assets/Gothicvania/Environments/lava-background/PNG/lava-tile.png" id="5_p57ef"]
 [ext_resource type="Texture2D" uid="uid://cl05jowuuu4lu" path="res://assets/Gothicvania/Environments/Living-Tissue-Platform-Files/PNG/layers/tileset.png" id="6_u5sy4"]
@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://diyiy2u0rpc23" path="res://scripts/dweller.gd" id="9_0tnpc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iywne"]
-texture = ExtResource("2_lnu2h")
+texture = ExtResource("1_0tnpc")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -60,9 +60,13 @@ texture = ExtResource("2_lnu2h")
 5:3/0 = 0
 5:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:3/0 = 0
+6:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:3/0 = 0
+7:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:3/0 = 0
+8:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:3/0 = 0
+9:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:4/0 = 0
 0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:4/0 = 0
@@ -76,11 +80,8 @@ texture = ExtResource("2_lnu2h")
 5:4/0 = 0
 5:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:4/0 = 0
-6:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-3.9173222, -8, 4.2655296, -8, 4.107433, 6.529047, 4.091427, 8, -4.091427, 8)
 7:4/0 = 0
-7:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:4/0 = 0
-8:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:4/0 = 0
 0:5/0 = 0
 0:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -95,11 +96,8 @@ texture = ExtResource("2_lnu2h")
 5:5/0 = 0
 5:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:5/0 = 0
-6:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:5/0 = 0
-7:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:5/0 = 0
-8:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:5/0 = 0
 0:6/0 = 0
 1:6/0 = 0
@@ -146,7 +144,7 @@ texture = ExtResource("2_lnu2h")
 1:1/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p57ef"]
-texture = ExtResource("3_lbhrr")
+texture = ExtResource("2_vtaks")
 2:3/0 = 0
 3:3/0 = 0
 4:3/0 = 0
@@ -290,8 +288,11 @@ texture = ExtResource("3_lbhrr")
 5:11/0 = 0
 5:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:11/0 = 0
+6:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:11/0 = 0
+7:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:11/0 = 0
+8:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:11/0 = 0
 9:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 10:11/0 = 0
@@ -847,11 +848,12 @@ layer_0/tile_data = PackedInt32Array(524299, 196608, 536870912, 1245185, 458753,
 position = Vector2(-307, -124)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=737952688]
-position = Vector2(376.00003, 262.00003)
+position = Vector2(1.9999695, 0.99993896)
 rotation = -1.4282928
+zoom = Vector2(4, 4)
 
 [node name="dweller" parent="." unique_id=1842085977 instance=ExtResource("8_gee14")]
-position = Vector2(448, 28)
+position = Vector2(287, 125)
 scale = Vector2(0.47321433, 0.38393208)
 collision_layer = 3
 script = ExtResource("9_0tnpc")
