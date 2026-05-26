@@ -848,9 +848,9 @@ layer_0/tile_data = PackedInt32Array(524299, 196608, 536870912, 1245185, 458753,
 position = Vector2(-307, -124)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=737952688]
-position = Vector2(1.9999695, 0.99993896)
+position = Vector2(7.9999695, 8.999977)
 rotation = -1.4282928
-zoom = Vector2(4, 4)
+zoom = Vector2(2, 2)
 
 [node name="dweller" parent="." unique_id=1842085977 instance=ExtResource("8_gee14")]
 position = Vector2(287, 125)
