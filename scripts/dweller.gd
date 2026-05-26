@@ -9,7 +9,7 @@ enum State {
 
 var current_state: State = State.PATROL
 var attack_radius := 24.0
-var base_speed := 40.0
+var base_speed := 10.0
 var speed := base_speed
 var detection_radius := 180.0
 var search_duration := 8.0
