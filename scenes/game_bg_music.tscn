@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bhx152ggbeky7"]
+
+[ext_resource type="AudioStream" uid="uid://uuwc1pr4qmsj" path="res://assets/Sounds/Music/game.mp3" id="1_e6e1j"]
+
+[node name="GameBGMusic" type="AudioStreamPlayer" unique_id=1849905001]
+stream = ExtResource("1_e6e1j")
+volume_db = -0.641
+autoplay = true
+bus = &"Musics"

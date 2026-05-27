@@ -9,7 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://cl05jowuuu4lu" path="res://assets/Gothicvania/Environments/Living-Tissue-Platform-Files/PNG/layers/tileset.png" id="6_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://crw8tpms05pcq" path="res://scenes/dweller.tscn" id="8_gee14"]
 [ext_resource type="Script" uid="uid://diyiy2u0rpc23" path="res://scripts/dweller.gd" id="9_0tnpc"]
-[ext_resource type="Script" uid="uid://heumfdkxeid" path="res://scripts/finish_area.gd" id="10_vtaks"]
+[ext_resource type="AudioStream" uid="uid://dcr78sf7kp5j2" path="res://assets/Sounds/SFX/dragonroar.mp3" id="10_kvpfn"]
+[ext_resource type="Script" path="res://scripts/finish_area.gd" id="10_vtaks"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iywne"]
 texture = ExtResource("1_0tnpc")
@@ -864,6 +865,10 @@ position = Vector2(452, 27)
 scale = Vector2(0.47321433, 0.38393208)
 collision_layer = 3
 script = ExtResource("9_0tnpc")
+
+[node name="roar" type="AudioStreamPlayer" parent="dweller" unique_id=1619398828]
+stream = ExtResource("10_kvpfn")
+bus = &"DragonSFX"
 
 [node name="FinishArea" type="Area2D" parent="." unique_id=1003541672]
 position = Vector2(490, 462)
