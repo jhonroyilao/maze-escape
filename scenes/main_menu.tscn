@@ -21,10 +21,10 @@ expand_mode = 1
 
 [node name="Button" type="Button" parent="." unique_id=1230712828]
 layout_mode = 0
-offset_left = 358.0
-offset_top = 490.99997
-offset_right = 1601.0
-offset_bottom = 744.0
+offset_left = 370.0
+offset_top = 406.99997
+offset_right = 1613.0
+offset_bottom = 660.0
 scale = Vector2(0.3391278, 0.3391278)
 icon = ExtResource("2_bqqt6")
 
