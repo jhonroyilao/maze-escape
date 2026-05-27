@@ -22,6 +22,7 @@ buses/default_bus_layout="uid://31g03jcqx785"
 
 GameBgMusic="*uid://bhx152ggbeky7"
 ChaseBgMusic="*uid://mh4rl87t5mj7"
+LevelManager="*res://scripts/level_manager.gd"
 
 [display]
 

@@ -40,4 +40,4 @@ grow_vertical = 2
 scale = Vector2(0.46, 0.46)
 icon = ExtResource("2_j2man")
 
-[connection signal="pressed" from="Button" to="." method=" _on_next_level_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_next_level_pressed"]
