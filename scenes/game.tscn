@@ -12,7 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://ghakummjse3l" path="res://assets/customUI/TILESET.png" id="7_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://crw8tpms05pcq" path="res://scenes/dweller.tscn" id="8_gee14"]
 [ext_resource type="Script" uid="uid://diyiy2u0rpc23" path="res://scripts/dweller.gd" id="9_0tnpc"]
-[ext_resource type="Script" uid="uid://heumfdkxeid" path="res://scripts/finish_area.gd" id="10_vtaks"]
+[ext_resource type="AudioStream" uid="uid://dcr78sf7kp5j2" path="res://assets/Sounds/SFX/dragonroar.mp3" id="10_kvpfn"]
+[ext_resource type="Script" path="res://scripts/finish_area.gd" id="10_vtaks"]
 [ext_resource type="Texture2D" uid="uid://cdsl8lxgkxg7u" path="res://assets/customUI/exit_label.png" id="14_trtic"]
 [ext_resource type="Texture2D" uid="uid://dip4sr1o6ywb5" path="res://assets/customUI/campsite_label.png" id="15_ir15t"]
 
@@ -1169,6 +1170,10 @@ position = Vector2(452, 16)
 scale = Vector2(0.47321433, 0.38393208)
 collision_layer = 3
 script = ExtResource("9_0tnpc")
+
+[node name="roar" type="AudioStreamPlayer" parent="dweller" unique_id=1619398828]
+stream = ExtResource("10_kvpfn")
+bus = &"DragonSFX"
 
 [node name="FinishArea" type="Area2D" parent="." unique_id=1003541672]
 position = Vector2(490, 462)

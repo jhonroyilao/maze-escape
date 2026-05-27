@@ -9,7 +9,7 @@ enum State {
 
 var current_state: State = State.PATROL
 var attack_radius := 24.0
-var base_speed := 40.0
+var base_speed := 30.0
 var speed := base_speed
 var detection_radius := 180.0
 var search_duration := 8.0
@@ -19,13 +19,19 @@ var unstuck_duration := 0.35
 var unstuck_probe_distance := 18.0
 var axis_probe_distance := 4.0
 var patrol_candidate_limit := 300
+var patrol_point_count := 8
 var vertical_corridor_x_offset := -2.0
 var corridor_center_tolerance := 0.5
+var fire_breath_animation_names := ["breath", "fire", "run"]
+var fire_breath_trigger_radius := 60.0
+var is_fire_breathing := false
+var roar_stream: AudioStream = preload("res://assets/Sounds/SFX/dragonroar.mp3")
 
 @onready var anim := $AnimatedSprite2D
 @onready var detection_area := $DetectionArea
 @onready var collision_shape := $CollisionShape2D
 @onready var debug_label := get_node_or_null("Label")
+@onready var roar: AudioStreamPlayer = get_node_or_null("roar") as AudioStreamPlayer
 
 var player: CharacterBody2D = null
 var tilemap: TileMap = null
@@ -64,14 +70,19 @@ var caught := false
 func _ready():
 	tilemap = get_parent().get_node("TileMap")
 	player = get_parent().get_node("Player")
+	if roar:
+		roar.stream = roar_stream
 
 	_build_astar()
-	_generate_patrol_points(8)
+	_apply_active_level_settings()
+	_generate_patrol_points(patrol_point_count)
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
+	anim.animation_changed.connect(_on_animation_changed)
+	anim.animation_looped.connect(_on_animation_looped)
 
-	anim.play("run")
+	_play_idle_animation()
 	last_position = global_position
 
 	print("[DWELLER] AI INITIALIZED")
@@ -116,8 +127,39 @@ func _check_catch_player():
 
 
 # =========================================================
+# LEVEL SETTINGS
+# =========================================================
+func configure_for_level(level_data: Dictionary):
+	speed = float(level_data.get("dweller_speed", speed))
+	detection_radius = float(level_data.get("detection_radius", detection_radius))
+	search_duration = float(level_data.get("search_duration", search_duration))
+	patrol_point_count = int(level_data.get("patrol_point_count", patrol_point_count))
+
+
+func _apply_active_level_settings():
+	var level_manager = get_node_or_null("/root/LevelManager")
+	if level_manager == null:
+		return
+	configure_for_level(level_manager.get_active_level())
+
+
+# =========================================================
 # FSM
 # =========================================================
+func _set_state(next_state: State):
+	if current_state == next_state:
+		return
+
+	var was_chasing = current_state == State.CHASE
+	current_state = next_state
+	var is_chasing = current_state == State.CHASE
+
+	if not was_chasing and is_chasing:
+		_start_chase_music()
+	elif was_chasing and not is_chasing:
+		_stop_chase_music()
+
+
 func _run_behavior(delta):
 	match current_state:
 		State.CHASE:
@@ -131,7 +173,7 @@ func _run_behavior(delta):
 			search_timer -= delta
 			if search_timer <= 0:
 				print("[DWELLER] Search expired -> PATROL")
-				current_state = State.PATROL
+				_set_state(State.PATROL)
 				path.clear()
 				path_index = 0
 				_advance_patrol()
@@ -200,7 +242,7 @@ func _check_player_visibility():
 			print("[DWELLER] PLAYER SPOTTED")
 			path.clear()
 			path_index = 0
-			current_state = State.CHASE
+			_set_state(State.CHASE)
 	else:
 		if player_in_sight:
 			player_in_sight = false
@@ -208,7 +250,7 @@ func _check_player_visibility():
 			if current_state == State.CHASE:
 				last_known_player_pos = player.global_position
 				search_timer = search_duration
-				current_state = State.SEARCH
+				_set_state(State.SEARCH)
 				path.clear()
 				path_index = 0
 
@@ -222,7 +264,7 @@ func _on_body_entered(body):
 		player_in_sight = true
 		path.clear()
 		path_index = 0
-		current_state = State.CHASE
+		_set_state(State.CHASE)
 
 
 func _on_body_exited(body):
@@ -232,7 +274,7 @@ func _on_body_exited(body):
 		if current_state == State.CHASE:
 			last_known_player_pos = player.global_position
 			search_timer = search_duration
-			current_state = State.SEARCH
+			_set_state(State.SEARCH)
 			path.clear()
 			path_index = 0
 
@@ -664,6 +706,27 @@ func _start_patrol():
 
 
 # =========================================================
+# MUSIC
+# =========================================================
+func _start_chase_music():
+	var game_bg_music = get_node_or_null("/root/GameBgMusic") as AudioStreamPlayer
+	if game_bg_music:
+		game_bg_music.stop()
+	var chase_bg_music = get_node_or_null("/root/ChaseBgMusic") as AudioStreamPlayer
+	if chase_bg_music and not chase_bg_music.playing:
+		chase_bg_music.play()
+
+
+func _stop_chase_music():
+	var chase_bg_music = get_node_or_null("/root/ChaseBgMusic") as AudioStreamPlayer
+	if chase_bg_music:
+		chase_bg_music.stop()
+	var game_bg_music = get_node_or_null("/root/GameBgMusic") as AudioStreamPlayer
+	if game_bg_music and not game_bg_music.playing:
+		game_bg_music.play()
+
+
+# =========================================================
 # DEBUG
 # =========================================================
 func _debug_tick(delta):
@@ -697,7 +760,57 @@ func _debug_tick(delta):
 # ANIMATION
 # =========================================================
 func _update_animation():
-	if velocity.length() > 5:
-		anim.play("run")
-	else:
-		anim.play("run")
+	if not _should_play_fire_breath_animation():
+		_play_idle_animation()
+		return
+
+	if is_fire_breathing:
+		return
+
+	_start_fire_breath_animation()
+
+
+func _play_animation(animation_name: StringName):
+	if anim.animation == animation_name and anim.is_playing():
+		return
+	anim.play(animation_name)
+
+
+func _on_animation_changed():
+	pass
+
+
+func _on_animation_looped():
+	if _is_fire_breath_animation(anim.animation):
+		_play_roar()
+
+
+func _is_fire_breath_animation(animation_name: StringName) -> bool:
+	var normalized_name = String(animation_name).to_lower()
+	for fire_breath_name in fire_breath_animation_names:
+		if normalized_name.contains(fire_breath_name):
+			return true
+	return false
+
+
+func _play_roar():
+	if roar == null:
+		return
+	roar.play()
+
+
+func _should_play_fire_breath_animation() -> bool:
+	if player == null:
+		return false
+	return global_position.distance_to(player.global_position) <= fire_breath_trigger_radius
+
+
+func _start_fire_breath_animation():
+	is_fire_breathing = true
+	_play_animation("run")
+	_play_roar()
+
+
+func _play_idle_animation():
+	is_fire_breathing = false
+	_play_animation("idle")
