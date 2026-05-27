@@ -1,34 +1,33 @@
 [gd_scene format=3 uid="uid://dlj8rnuohfqgd"]
 
 [ext_resource type="Script" uid="uid://herdf118mh8p" path="res://scripts/gameover.gd" id="1_xeevv"]
+[ext_resource type="Texture2D" uid="uid://chy0kn3yli6g4" path="res://assets/customUI/GAME OVER.png" id="2_wqhvx"]
+[ext_resource type="Texture2D" uid="uid://bbqkus465gsax" path="res://assets/customUI/go_button.png" id="3_tbwuq"]
 
 [node name="GameOver" type="Control" unique_id=703333741]
+custom_minimum_size = Vector2(1152, 648)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[node name="ColorRect" type="ColorRect" parent="." unique_id=514409692]
-layout_mode = 0
-offset_right = 1145.0
-offset_bottom = 1145.0
-color = Color(0, 0, 0, 1)
-
-[node name="Label" type="Label" parent="." unique_id=1274608642]
-layout_mode = 0
-offset_left = 162.0
-offset_top = 200.0
-offset_right = 254.0
-offset_bottom = 223.0
-scale = Vector2(8.130529, 8.130529)
-text = "GAME OVER"
 script = ExtResource("1_xeevv")
 
-[node name="Button" type="Button" parent="." unique_id=1476831407]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=705458954]
+custom_minimum_size = Vector2(1152, 648)
 layout_mode = 0
-offset_left = 338.0
-offset_top = 376.0
-offset_right = 384.0
-offset_bottom = 407.0
-scale = Vector2(8.786981, 8.786981)
-text = "retry"
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_wqhvx")
+expand_mode = 2
+
+[node name="Button" type="Button" parent="." unique_id=1527101664]
+custom_minimum_size = Vector2(407.46, 79.31)
+layout_mode = 0
+offset_left = 352.0
+offset_top = 380.00003
+offset_right = 1595.0
+offset_bottom = 633.00006
+scale = Vector2(0.38053757, 0.38053757)
+icon = ExtResource("3_tbwuq")
+
+[connection signal="pressed" from="Button" to="." method="_on_play_again_pressed"]

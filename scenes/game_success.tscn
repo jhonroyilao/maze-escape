@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bbtdnb3ivesfp"]
+
+[ext_resource type="Script" uid="uid://jm1ai1ymxl4k" path="res://scripts/game_success.gd" id="1_j2man"]
+[ext_resource type="Texture2D" uid="uid://bap4oxhqbx4el" path="res://assets/customUI/ESCAPE.png" id="1_uirum"]
+[ext_resource type="Texture2D" uid="uid://ljh455f1nyp3" path="res://assets/customUI/next_level.png" id="2_j2man"]
+
+[node name="success" type="Control" unique_id=1139318727]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_j2man")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1671216112]
+layout_mode = 0
+offset_right = 3456.0
+offset_bottom = 1944.0
+scale = Vector2(0.33480632, 0.33480632)
+texture = ExtResource("1_uirum")
+
+[node name="Button" type="Button" parent="." unique_id=328087480]
+layout_mode = 0
+offset_left = 382.0
+offset_top = 465.00003
+offset_right = 1678.0
+offset_bottom = 718.0
+scale = Vector2(0.2984205, 0.2984205)
+icon = ExtResource("2_j2man")
+
+[connection signal="pressed" from="Button" to="." method=" _on_next_level_pressed"]
