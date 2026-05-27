@@ -80,7 +80,7 @@ func _ready():
 	anim.animation_changed.connect(_on_animation_changed)
 	anim.animation_looped.connect(_on_animation_looped)
 
-	_stop_fire_breath_animation()
+	_play_idle_animation()
 	last_position = global_position
 
 	print("[DWELLER] AI INITIALIZED")
@@ -742,7 +742,7 @@ func _debug_tick(delta):
 # =========================================================
 func _update_animation():
 	if not _should_play_fire_breath_animation():
-		_stop_fire_breath_animation()
+		_play_idle_animation()
 		return
 
 	if is_fire_breathing:
@@ -758,8 +758,7 @@ func _play_animation(animation_name: StringName):
 
 
 func _on_animation_changed():
-	if not is_fire_breathing:
-		_play_roar()
+	pass
 
 
 func _on_animation_looped():
@@ -793,8 +792,6 @@ func _start_fire_breath_animation():
 	_play_roar()
 
 
-func _stop_fire_breath_animation():
+func _play_idle_animation():
 	is_fire_breathing = false
-	if anim.is_playing():
-		anim.stop()
-	anim.frame = 0
+	_play_animation("idle")
