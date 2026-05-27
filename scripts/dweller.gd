@@ -19,6 +19,7 @@ var unstuck_duration := 0.35
 var unstuck_probe_distance := 18.0
 var axis_probe_distance := 4.0
 var patrol_candidate_limit := 300
+var patrol_point_count := 8
 var vertical_corridor_x_offset := -2.0
 var corridor_center_tolerance := 0.5
 var fire_breath_animation_names := ["breath", "fire", "run"]
@@ -73,7 +74,8 @@ func _ready():
 		roar.stream = roar_stream
 
 	_build_astar()
-	_generate_patrol_points(8)
+	_apply_active_level_settings()
+	_generate_patrol_points(patrol_point_count)
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
@@ -122,6 +124,23 @@ func _check_catch_player():
 		caught = true
 		print("[DWELLER] PLAYER CAUGHT -> GAME OVER")
 		get_tree().change_scene_to_file("res://scenes/game_over.tscn")
+
+
+# =========================================================
+# LEVEL SETTINGS
+# =========================================================
+func configure_for_level(level_data: Dictionary):
+	speed = float(level_data.get("dweller_speed", speed))
+	detection_radius = float(level_data.get("detection_radius", detection_radius))
+	search_duration = float(level_data.get("search_duration", search_duration))
+	patrol_point_count = int(level_data.get("patrol_point_count", patrol_point_count))
+
+
+func _apply_active_level_settings():
+	var level_manager = get_node_or_null("/root/LevelManager")
+	if level_manager == null:
+		return
+	configure_for_level(level_manager.get_active_level())
 
 
 # =========================================================

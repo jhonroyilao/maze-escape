@@ -10,9 +10,18 @@ func _ready():
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+			_confirm_next_step()
 		elif event.keycode == KEY_ESCAPE:
 			get_tree().quit()
 
+
 func _on_next_level_pressed():
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	_confirm_next_step()
+
+
+func _confirm_next_step():
+	var level_manager = get_node_or_null("/root/LevelManager")
+	if level_manager:
+		level_manager.proceed_from_success()
+	else:
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
