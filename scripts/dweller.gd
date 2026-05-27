@@ -22,7 +22,7 @@ var patrol_candidate_limit := 300
 var vertical_corridor_x_offset := -2.0
 var corridor_center_tolerance := 0.5
 var fire_breath_animation_names := ["breath", "fire", "run"]
-var fire_breath_trigger_radius := 120.0
+var fire_breath_trigger_radius := 60.0
 var is_fire_breathing := false
 var roar_stream: AudioStream = preload("res://assets/Sounds/SFX/dragonroar.mp3")
 
