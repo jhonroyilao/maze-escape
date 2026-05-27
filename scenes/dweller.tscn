@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://crw8tpms05pcq"]
 
-[ext_resource type="Texture2D" uid="uid://o5xg2wkhjbeu" path="res://assets/Gothicvania/Characters/Grotto-escape-2-boss-dragon/spritesheets/breath.png" id="2_hlv0e"]
+[ext_resource type="Texture2D" uid="uid://o5xg2wkhjbeu" path="res://assets/0DRAGON/spritesheets/breath.png" id="2_hlv0e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eopx3"]
 atlas = ExtResource("2_hlv0e")
