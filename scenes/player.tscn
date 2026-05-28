@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ck6tk6ri7gkj2"]
 
-[ext_resource type="Texture2D" uid="uid://cah086konwt4d" path="res://assets/SpriteSheets(96x96)/Human_Soldier_Sword_Shield/No_Shadows/Human_Soldier_Sword_Shield_Idle-Sheet.png" id="1_3vyb7"]
+[ext_resource type="Texture2D" uid="uid://cah086konwt4d" path="res://assets/2 PLAYER SHEET/Human_Soldier_Sword_Shield/No_Shadows/Human_Soldier_Sword_Shield_Idle-Sheet.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://pis40md4dnqp" path="res://scripts/player.gd" id="1_g2els"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
