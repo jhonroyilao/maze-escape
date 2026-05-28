@@ -11,17 +11,17 @@ config_version=5
 [application]
 
 config/name="Maze-Escape"
-run/main_scene="uid://4lsf8rh4yjtj"
+run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
 [audio]
 
-buses/default_bus_layout="uid://31g03jcqx785"
+buses/default_bus_layout="res://default_bus_layout.tres"
 
 [autoload]
 
-GameBgMusic="*uid://bhx152ggbeky7"
-ChaseBgMusic="*uid://mh4rl87t5mj7"
+GameBgMusic="*res://scenes/game_bg_music.tscn"
+ChaseBgMusic="*res://scenes/chase_bg_music.tscn"
 LevelManager="*res://scripts/level_manager.gd"
 
 [display]
