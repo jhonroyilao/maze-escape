@@ -14,10 +14,6 @@ config/name="Maze-Escape"
 run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
-[audio]
-
-buses/default_bus_layout="res://default_bus_layout.tres"
-
 [autoload]
 
 GameBgMusic="*res://scenes/game_bg_music.tscn"
