@@ -2,7 +2,8 @@ extends Node
 
 const SUCCESS_SCENE_PATH := "res://scenes/game_success.tscn"
 const DEFAULT_MAZE_SCENE_PATH := "res://scenes/game.tscn"
-const LARGER_MAZE_SCENE_PATH := "res://scenes/game2.tscn"
+const LARGER_MAZE1_SCENE_PATH := "res://scenes/game1.tscn"
+const LARGER_MAZE2_SCENE_PATH := "res://scenes/game2.tscn"
 
 var current_level_index := 0
 var levels := [
@@ -10,7 +11,7 @@ var levels := [
 		"level_number": 1,
 		"display_name": "Level 1",
 		"maze_scene_path": DEFAULT_MAZE_SCENE_PATH,
-		"dweller_speed": 40.0,
+		"dweller_speed": 45.0,
 		"detection_radius": 140.0,
 		"search_duration": 5.0,
 		"patrol_point_count": 5,
@@ -21,7 +22,7 @@ var levels := [
 	{
 		"level_number": 2,
 		"display_name": "Level 2",
-		"maze_scene_path": LARGER_MAZE_SCENE_PATH,
+		"maze_scene_path": LARGER_MAZE1_SCENE_PATH,
 		"dweller_speed": 50,
 		"detection_radius": 170.0,
 		"search_duration": 7.0,
@@ -33,8 +34,8 @@ var levels := [
 	{
 		"level_number": 3,
 		"display_name": "Level 3",
-		"maze_scene_path": DEFAULT_MAZE_SCENE_PATH,
-		"dweller_speed": 60,
+		"maze_scene_path": LARGER_MAZE2_SCENE_PATH,
+		"dweller_speed": 55,
 		"detection_radius": 180.0,
 		"search_duration": 8.0,
 		"patrol_point_count": 8,
