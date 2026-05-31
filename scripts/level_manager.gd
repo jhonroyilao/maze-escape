@@ -4,6 +4,8 @@ const SUCCESS_SCENE_PATH := "res://scenes/game_success.tscn"
 const DEFAULT_MAZE_SCENE_PATH := "res://scenes/game0.tscn"
 const LARGER_MAZE1_SCENE_PATH := "res://scenes/game1.tscn"
 const LARGER_MAZE2_SCENE_PATH := "res://scenes/game2.tscn"
+const LARGER_MAZE3_SCENE_PATH := "res://scenes/game3.tscn"
+const LARGER_MAZE4_SCENE_PATH := "res://scenes/game4.tscn"
 
 var current_level_index := 0
 var levels := [
@@ -46,7 +48,7 @@ var levels := [
 	{
 		"level_number": 4,
 		"display_name": "Level 4",
-		"maze_scene_path": DEFAULT_MAZE_SCENE_PATH,
+		"maze_scene_path": LARGER_MAZE3_SCENE_PATH,
 		"dweller_speed": 55.0,
 		"detection_radius": 230.0,
 		"search_duration": 9.0,
@@ -58,7 +60,7 @@ var levels := [
 	{
 		"level_number": 5,
 		"display_name": "Level 5",
-		"maze_scene_path": DEFAULT_MAZE_SCENE_PATH,
+		"maze_scene_path": LARGER_MAZE4_SCENE_PATH,
 		"dweller_speed": 60.0,
 		"detection_radius": 270.0,
 		"search_duration": 12.0,
