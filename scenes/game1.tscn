@@ -1168,6 +1168,9 @@ size = Vector2(97, 96)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3xlim"]
 size = Vector2(95, 96)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lfiiy"]
+size = Vector2(20, 40)
+
 [node name="GAME" type="Node2D" unique_id=1854802091]
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=622285694]
@@ -1246,5 +1249,13 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Camp/campwall" unique_id=1441823315]
 position = Vector2(-16.5, 168)
 shape = SubResource("RectangleShape2D_3xlim")
+
+[node name="MazeExitWall" type="StaticBody2D" parent="." unique_id=1720356670]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MazeExitWall" unique_id=1817367948]
+position = Vector2(507, 448)
+shape = SubResource("RectangleShape2D_lfiiy")
 
 [connection signal="body_entered" from="FinishArea" to="FinishArea" method="_on_body_entered"]
