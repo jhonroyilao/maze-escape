@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://cdsl8lxgkxg7u" path="res://assets/customUI/exit_label.png" id="15_mjadu"]
 [ext_resource type="Texture2D" uid="uid://dip4sr1o6ywb5" path="res://assets/customUI/campsite_label.png" id="16_k8jaa"]
 [ext_resource type="Script" path="res://scripts/dweller_spawner.gd" id="17_d37be"]
+[ext_resource type="Script" path="res://scripts/day_night_cycle.gd" id="18_rsoj7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iywne"]
 texture = ExtResource("2_okhi1")
@@ -1174,6 +1175,9 @@ size = Vector2(20, 40)
 
 [node name="GAME2" type="Node2D" unique_id=1854802091]
 script = ExtResource("17_d37be")
+
+[node name="DayNightCycle" type="CanvasModulate" parent="." unique_id=1095869375]
+script = ExtResource("18_rsoj7")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=622285694]
 offset_left = -765.0
