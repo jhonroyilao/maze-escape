@@ -11,6 +11,7 @@ var current_state: State = State.PATROL
 var attack_radius := 24.0
 var base_speed := 30.0
 var speed := base_speed
+var base_detection_radius := 180.0
 var detection_radius := 180.0
 var search_duration := 8.0
 var waypoint_reached_distance := 4.0
@@ -70,6 +71,7 @@ var caught := false
 # READY
 # =========================================================
 func _ready():
+	add_to_group("dwellers")
 	tilemap = get_parent().get_node("TileMap")
 	player = get_parent().get_node("Player")
 	if roar:
@@ -142,10 +144,18 @@ func _check_catch_player():
 # LEVEL SETTINGS
 # =========================================================
 func configure_for_level(level_data: Dictionary):
-	speed = float(level_data.get("dweller_speed", speed))
-	detection_radius = float(level_data.get("detection_radius", detection_radius))
+	base_speed = float(level_data.get("dweller_speed", base_speed))
+	base_detection_radius = float(level_data.get("detection_radius", base_detection_radius))
+	speed = base_speed
+	detection_radius = base_detection_radius
 	search_duration = float(level_data.get("search_duration", search_duration))
 	patrol_point_count = int(level_data.get("patrol_point_count", patrol_point_count))
+
+
+func set_night_intensity(intensity: float) -> void:
+	var clamped_intensity := clampf(intensity, 0.0, 1.0)
+	speed = lerpf(base_speed, base_speed * 1.10, clamped_intensity)
+	detection_radius = lerpf(base_detection_radius, base_detection_radius * 1.25, clamped_intensity)
 
 
 func _apply_active_level_settings():
