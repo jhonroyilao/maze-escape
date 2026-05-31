@@ -49,6 +49,8 @@ var repath_timer := 0.0
 var wander_timer := 0.0
 var wander_interval := 3.0
 var current_target := Vector2.ZERO
+var camp: Area2D = null
+var player_in_camp := false
 
 var debug_timer := 0.0
 var stuck_timer := 0.0
@@ -82,6 +84,15 @@ func _ready():
 	anim.animation_changed.connect(_on_animation_changed)
 	anim.animation_looped.connect(_on_animation_looped)
 
+	camp = get_parent().get_node_or_null("Camp")
+	if camp:
+		camp.body_entered.connect(_on_camp_body_entered)
+		camp.body_exited.connect(_on_camp_body_exited)
+		_block_camp_in_astar()
+		print("[DWELLER] Camp zone loaded")
+	else:
+		print("[DWELLER] No camp found")
+		
 	_play_idle_animation()
 	last_position = global_position
 
@@ -90,6 +101,7 @@ func _ready():
 
 	await get_tree().process_frame
 	_start_patrol()
+	
 
 
 # =========================================================
@@ -234,6 +246,12 @@ func _check_player_visibility():
 	if player == null:
 		return
 
+		# ++ Camp protection
+	if player_in_camp:
+		if player_in_sight:
+			player_in_sight = false
+		return
+
 	var dist = global_position.distance_to(player.global_position)
 
 	if dist <= detection_radius:
@@ -260,6 +278,8 @@ func _check_player_visibility():
 # =========================================================
 func _on_body_entered(body):
 	if body.name == "Player":
+		if player_in_camp:
+			return
 		print("[DWELLER] Player entered detection")
 		player_in_sight = true
 		path.clear()
@@ -346,6 +366,52 @@ func _body_at_offset_overlaps_wall(offset: Vector2i, shape_center: Vector2, shap
 
 	return body_min.x < wall_max.x and body_max.x > wall_min.x and body_min.y < wall_max.y and body_max.y > wall_min.y
 
+
+
+#====================
+# BLOCK CAMP SA A*
+# ==================
+# ++ Block camp area sa A* para hindi makapasok ang dweller
+func _block_camp_in_astar():
+	if camp == null:
+		return
+	var shape_node = camp.get_node_or_null("CollisionShape2D")
+	if shape_node == null or not shape_node.shape is RectangleShape2D:
+		return
+
+	var rect_shape := shape_node.shape as RectangleShape2D
+	var center = tilemap.local_to_map(tilemap.to_local(camp.global_position))
+	var half = rect_shape.size / 2.0
+	# convert pixel half-extents to tile counts, +1 buffer
+	var tx = int(ceil(half.x / cell_size.x)) + 1
+	var ty = int(ceil(half.y / cell_size.y)) + 1
+
+	for dx in range(-tx, tx + 1):
+		for dy in range(-ty, ty + 1):
+			var cell = center + Vector2i(dx, dy)
+			if astar.is_in_boundsv(cell):
+				astar.set_point_solid(cell, true)
+
+	print("[DWELLER] Camp blocked in astar")
+
+
+func _on_camp_body_entered(body):
+	if body.name == "Player":
+		player_in_camp = true
+		print("[DWELLER] Player entered camp -> safe")
+		# ++ If currently chasing, drop it
+		if current_state == State.CHASE or current_state == State.SEARCH:
+			player_in_sight = false
+			_set_state(State.PATROL)
+			path.clear()
+			path_index = 0
+			_advance_patrol()
+
+
+func _on_camp_body_exited(body):
+	if body.name == "Player":
+		player_in_camp = false
+		print("[DWELLER] Player left camp")
 
 # =========================================================
 # PATHFINDING

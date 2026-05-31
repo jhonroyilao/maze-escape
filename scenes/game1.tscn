@@ -1162,13 +1162,22 @@ sources/12 = SubResource("TileSetAtlasSource_ca42v")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kvpfn"]
 size = Vector2(28, 63)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ga5ey"]
+size = Vector2(97, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3xlim"]
+size = Vector2(95, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lfiiy"]
+size = Vector2(20, 40)
+
 [node name="GAME" type="Node2D" unique_id=1854802091]
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=622285694]
 offset_left = -765.0
-offset_top = -419.0
+offset_top = -417.0
 offset_right = 1131.0432
-offset_bottom = 663.0
+offset_bottom = 665.0
 texture = ExtResource("1_ga5ey")
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1037192124]
@@ -1194,7 +1203,8 @@ limit_top = 0
 [node name="dweller" parent="." unique_id=1842085977 instance=ExtResource("11_c1eq5")]
 position = Vector2(452, 16)
 scale = Vector2(0.47321433, 0.38393208)
-collision_layer = 3
+collision_layer = 2
+collision_mask = 7
 script = ExtResource("12_17jp4")
 
 [node name="roar" type="AudioStreamPlayer" parent="dweller" unique_id=1619398828]
@@ -1224,5 +1234,28 @@ offset_right = 440.0
 offset_bottom = 272.0
 scale = Vector2(0.18758269, 0.18758269)
 texture = ExtResource("16_y4uap")
+
+[node name="Camp" type="Area2D" parent="." unique_id=331196877]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Camp" unique_id=875169479]
+position = Vector2(-16.5, 168)
+shape = SubResource("RectangleShape2D_ga5ey")
+
+[node name="campwall" type="StaticBody2D" parent="Camp" unique_id=1729807173]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Camp/campwall" unique_id=1441823315]
+position = Vector2(-16.5, 168)
+shape = SubResource("RectangleShape2D_3xlim")
+
+[node name="MazeExitWall" type="StaticBody2D" parent="." unique_id=1720356670]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MazeExitWall" unique_id=1817367948]
+position = Vector2(507, 448)
+shape = SubResource("RectangleShape2D_lfiiy")
 
 [connection signal="body_entered" from="FinishArea" to="FinishArea" method="_on_body_entered"]
