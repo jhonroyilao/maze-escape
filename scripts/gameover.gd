@@ -22,4 +22,7 @@ func _input(event):
 # PLAY AGAIN BUTTON
 # =========================================================
 func _on_play_again_pressed():
+	var level_manager = get_node_or_null("/root/LevelManager")
+	if level_manager:
+		level_manager.reset_progression()
 	get_tree().change_scene_to_file("res://scenes/game0.tscn")

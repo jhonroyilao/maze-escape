@@ -1162,7 +1162,7 @@ sources/12 = SubResource("TileSetAtlasSource_ca42v")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kvpfn"]
 size = Vector2(28, 47.5)
 
-[node name="GAME" type="Node2D" unique_id=1854802091]
+[node name="GAME2" type="Node2D" unique_id=1854802091]
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=622285694]
 offset_left = -765.0
@@ -1186,6 +1186,7 @@ position = Vector2(-304, 429)
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=737952688]
 position = Vector2(7.9999695, 8.999977)
 rotation = -1.4282928
+zoom = Vector2(4, 4)
 limit_enabled = false
 limit_left = 0
 limit_top = 0

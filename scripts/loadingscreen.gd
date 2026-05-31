@@ -10,10 +10,10 @@ var is_loading_started: bool = false
 func _ready() -> void:
 	progress_bar.value = 0.0
 	if ResourceLoader.has_cached(GAME_SCENE_PATH):
-		is_loading_started = true
+		_change_to_game_scene(load(GAME_SCENE_PATH))
 	else:
 		var error = ResourceLoader.load_threaded_request(GAME_SCENE_PATH)
-		if error == OK:
+		if error == OK or error == ERR_BUSY:
 			is_loading_started = true
 
 func _process(delta: float) -> void:
@@ -34,6 +34,12 @@ func _process(delta: float) -> void:
 		if status == ResourceLoader.THREAD_LOAD_LOADED:
 			set_process(false)
 			var packed_scene = ResourceLoader.load_threaded_get(GAME_SCENE_PATH)
-			get_tree().change_scene_to_packed(packed_scene)
+			_change_to_game_scene(packed_scene)
 		elif status == ResourceLoader.THREAD_LOAD_FAILED:
 			set_process(false)
+
+func _change_to_game_scene(packed_scene: PackedScene) -> void:
+	if packed_scene == null:
+		get_tree().change_scene_to_file(GAME_SCENE_PATH)
+		return
+	get_tree().change_scene_to_packed(packed_scene)
