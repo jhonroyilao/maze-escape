@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
-const SPEED = 60.0
+const SPEED = 50.0
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# Get input for all directions
 	var input_vector = Vector2(
 		Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
@@ -21,3 +21,7 @@ func _physics_process(delta: float) -> void:
 	
 	
 	
+
+
+func _on_body_entered(_body_rid: RID, _body: Node2D, _body_shape_index: int, _local_shape_index: int) -> void:
+	pass # Replace with function body.

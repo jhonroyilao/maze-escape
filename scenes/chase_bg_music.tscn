@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://mh4rl87t5mj7"]
+
+[ext_resource type="AudioStream" uid="uid://bjrogjiuxri4d" path="res://assets/Sounds/Music/chase.mp3" id="1_y0tek"]
+
+[node name="Chase" type="AudioStreamPlayer" unique_id=323017682]
+process_mode = 3
+stream = ExtResource("1_y0tek")
+bus = &"Chase"

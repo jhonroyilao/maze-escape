@@ -1,6 +1,31 @@
 [gd_scene format=3 uid="uid://crw8tpms05pcq"]
 
-[ext_resource type="Texture2D" uid="uid://o5xg2wkhjbeu" path="res://assets/Gothicvania/Characters/Grotto-escape-2-boss-dragon/spritesheets/breath.png" id="2_hlv0e"]
+[ext_resource type="Texture2D" uid="uid://dfia56yuxeba1" path="res://assets/0DRAGON/spritesheets/idle.png" id="1_hlv0e"]
+[ext_resource type="Texture2D" uid="uid://o5xg2wkhjbeu" path="res://assets/0DRAGON/spritesheets/breath.png" id="2_hlv0e"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pw0lp"]
+atlas = ExtResource("1_hlv0e")
+region = Rect2(0, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_83xkl"]
+atlas = ExtResource("1_hlv0e")
+region = Rect2(144, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nm4vq"]
+atlas = ExtResource("1_hlv0e")
+region = Rect2(288, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r01iv"]
+atlas = ExtResource("1_hlv0e")
+region = Rect2(432, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hi2dd"]
+atlas = ExtResource("1_hlv0e")
+region = Rect2(576, 0, 144, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hap5o"]
+atlas = ExtResource("1_hlv0e")
+region = Rect2(720, 0, 144, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eopx3"]
 atlas = ExtResource("2_hlv0e")
@@ -34,6 +59,29 @@ region = Rect2(864, 0, 144, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_pw0lp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_83xkl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nm4vq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r01iv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hi2dd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hap5o")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_eopx3")
 }, {
 "duration": 1.0,
@@ -60,7 +108,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6gdca"]
-size = Vector2(28.5, 8)
+size = Vector2(12, 8)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hlv0e"]
 radius = 329.65588
@@ -72,12 +120,12 @@ safe_margin = 0.01
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1075517130]
 position = Vector2(-11, -33)
 sprite_frames = SubResource("SpriteFrames_eopx3")
-animation = &"run"
-autoplay = "run"
-frame_progress = 0.25395894
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.02012335
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637340170]
-position = Vector2(7, -7)
+position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_6gdca")
 debug_color = Color(0.9987412, 0, 0.14602458, 0.41960785)
 

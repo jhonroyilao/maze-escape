@@ -11,9 +11,26 @@ config_version=5
 [application]
 
 config/name="Maze-Escape"
-run/main_scene="uid://4lsf8rh4yjtj"
+run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://31g03jcqx785"
+
+[autoload]
+
+GameBgMusic="*res://scenes/game_bg_music.tscn"
+ChaseBgMusic="*res://scenes/chase_bg_music.tscn"
+LevelManager="*res://scripts/level_manager.gd"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/size/window_width_override=1600
+window/size/window_height_override=900
+window/stretch/mode="canvas_items"
 
 [physics]
 
@@ -23,3 +40,4 @@ config/icon="res://icon.svg"
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
+2d/snap/snap_2d_transforms_to_pixel=true
