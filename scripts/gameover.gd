@@ -22,4 +22,4 @@ func _input(event):
 # PLAY AGAIN BUTTON
 # =========================================================
 func _on_play_again_pressed():
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	get_tree().change_scene_to_file("res://scenes/game0.tscn")
