@@ -108,7 +108,7 @@ func _ready():
 # MAIN LOOP
 # =========================================================
 func _physics_process(delta):
-	if caught:
+	if caught or not is_inside_tree():
 		return
 
 	velocity = Vector2.ZERO
@@ -135,7 +135,7 @@ func _check_catch_player():
 	if dist <= attack_radius:
 		caught = true
 		print("[DWELLER] PLAYER CAUGHT -> GAME OVER")
-		get_tree().change_scene_to_file("res://scenes/game_over.tscn")
+		get_tree().call_deferred("change_scene_to_file", "res://scenes/game_over.tscn")
 
 
 # =========================================================
@@ -506,6 +506,8 @@ func _find_reachable_path_near_target(from_cell: Vector2i, target_cell: Vector2i
 # MOVEMENT
 # =========================================================
 func _move_along_path(delta):
+	if not is_inside_tree():
+		return
 	if _path_exhausted():
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -582,6 +584,8 @@ func _get_alternate_grid_direction(target: Vector2, primary_direction: Vector2) 
 func _is_axis_step_blocked(direction: Vector2, delta: float) -> bool:
 	if direction == Vector2.ZERO:
 		return true
+	if not is_inside_tree():
+		return false
 	var probe_distance = max(axis_probe_distance, speed * delta)
 	return test_move(global_transform, direction * probe_distance)
 

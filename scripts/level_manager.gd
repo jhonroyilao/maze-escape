@@ -91,12 +91,12 @@ func advance_to_next_level() -> bool:
 
 
 func complete_current_level():
-	get_tree().change_scene_to_file(SUCCESS_SCENE_PATH)
+	get_tree().call_deferred("change_scene_to_file", SUCCESS_SCENE_PATH)
 
 
 func proceed_from_success():
 	if advance_to_next_level():
-		get_tree().change_scene_to_file(get_active_level()["maze_scene_path"])
+		get_tree().call_deferred("change_scene_to_file", get_active_level()["maze_scene_path"])
 	else:
 		reset_progression()
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		get_tree().call_deferred("change_scene_to_file", "res://scenes/main_menu.tscn")

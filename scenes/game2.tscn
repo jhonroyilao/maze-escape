@@ -16,7 +16,7 @@
 [ext_resource type="Script" uid="uid://heumfdkxeid" path="res://scripts/finish_area.gd" id="14_chdjo"]
 [ext_resource type="Texture2D" uid="uid://cdsl8lxgkxg7u" path="res://assets/customUI/exit_label.png" id="15_mjadu"]
 [ext_resource type="Texture2D" uid="uid://dip4sr1o6ywb5" path="res://assets/customUI/campsite_label.png" id="16_k8jaa"]
-[ext_resource type="Script" uid="uid://dkxf76ysn62r" path="res://scripts/dweller_spawner.gd" id="17_d37be"]
+[ext_resource type="Script" path="res://scripts/dweller_spawner.gd" id="17_d37be"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iywne"]
 texture = ExtResource("2_okhi1")
