@@ -1,7 +1,7 @@
 extends Node
 
 const SUCCESS_SCENE_PATH := "res://scenes/game_success.tscn"
-const DEFAULT_MAZE_SCENE_PATH := "res://scenes/game.tscn"
+const DEFAULT_MAZE_SCENE_PATH := "res://scenes/game0.tscn"
 const LARGER_MAZE1_SCENE_PATH := "res://scenes/game1.tscn"
 const LARGER_MAZE2_SCENE_PATH := "res://scenes/game2.tscn"
 
@@ -35,7 +35,7 @@ var levels := [
 		"level_number": 3,
 		"display_name": "Level 3",
 		"maze_scene_path": LARGER_MAZE2_SCENE_PATH,
-		"dweller_speed": 55,
+		"dweller_speed": 70,
 		"detection_radius": 180.0,
 		"search_duration": 8.0,
 		"patrol_point_count": 8,
