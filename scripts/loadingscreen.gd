@@ -2,7 +2,7 @@ extends Control
 
 @onready var progress_bar: TextureProgressBar = $TextureProgressBar
 
-const GAME_SCENE_PATH = "res://scenes/game.tscn"
+const GAME_SCENE_PATH = "res://scenes/game0.tscn"
 
 var current_value: float = 0.0
 var is_loading_started: bool = false
