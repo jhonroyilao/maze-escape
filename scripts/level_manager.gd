@@ -15,6 +15,7 @@ var levels := [
 		"detection_radius": 140.0,
 		"search_duration": 5.0,
 		"patrol_point_count": 5,
+		"extra_dweller_count": 0,
 		"camps_enabled": false,
 		"day_night_enabled": false,
 		"aggressive_ai_enabled": false
@@ -27,6 +28,7 @@ var levels := [
 		"detection_radius": 170.0,
 		"search_duration": 7.0,
 		"patrol_point_count": 7,
+		"extra_dweller_count": 0,
 		"camps_enabled": true,
 		"day_night_enabled": false,
 		"aggressive_ai_enabled": false
@@ -39,6 +41,7 @@ var levels := [
 		"detection_radius": 180.0,
 		"search_duration": 8.0,
 		"patrol_point_count": 8,
+		"extra_dweller_count": 0,
 		"camps_enabled": true,
 		"day_night_enabled": true,
 		"aggressive_ai_enabled": false
@@ -47,10 +50,11 @@ var levels := [
 		"level_number": 4,
 		"display_name": "Level 4",
 		"maze_scene_path": LARGER_MAZE2_SCENE_PATH,
-		"dweller_speed": 55.0,
+		"dweller_speed": 52.0,
 		"detection_radius": 230.0,
 		"search_duration": 9.0,
 		"patrol_point_count": 10,
+		"extra_dweller_count": 1,
 		"camps_enabled": true,
 		"day_night_enabled": true,
 		"aggressive_ai_enabled": false
@@ -59,10 +63,11 @@ var levels := [
 		"level_number": 5,
 		"display_name": "Level 5",
 		"maze_scene_path": LARGER_MAZE2_SCENE_PATH,
-		"dweller_speed": 60.0,
+		"dweller_speed": 55.0,
 		"detection_radius": 270.0,
 		"search_duration": 12.0,
 		"patrol_point_count": 12,
+		"extra_dweller_count": 2,
 		"camps_enabled": true,
 		"day_night_enabled": true,
 		"aggressive_ai_enabled": true

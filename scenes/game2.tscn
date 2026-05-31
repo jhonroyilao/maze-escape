@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://heumfdkxeid" path="res://scripts/finish_area.gd" id="14_chdjo"]
 [ext_resource type="Texture2D" uid="uid://cdsl8lxgkxg7u" path="res://assets/customUI/exit_label.png" id="15_mjadu"]
 [ext_resource type="Texture2D" uid="uid://dip4sr1o6ywb5" path="res://assets/customUI/campsite_label.png" id="16_k8jaa"]
+[ext_resource type="Script" uid="uid://dkxf76ysn62r" path="res://scripts/dweller_spawner.gd" id="17_d37be"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iywne"]
 texture = ExtResource("2_okhi1")
@@ -1172,6 +1173,7 @@ size = Vector2(95, 96)
 size = Vector2(20, 40)
 
 [node name="GAME2" type="Node2D" unique_id=1854802091]
+script = ExtResource("17_d37be")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=622285694]
 offset_left = -765.0
@@ -1195,7 +1197,6 @@ position = Vector2(-304, 429)
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=737952688]
 position = Vector2(7.9999695, 8.999977)
 rotation = -1.4282928
-zoom = Vector2(4, 4)
 limit_enabled = false
 limit_left = 0
 limit_top = 0
