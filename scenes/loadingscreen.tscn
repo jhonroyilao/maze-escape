@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bam0rndw0184o"]
+
+[ext_resource type="Script" uid="uid://ciy0qksh0o3jn" path="res://scripts/loadingscreen.gd" id="1_pexxm"]
+[ext_resource type="Texture2D" uid="uid://du85yvn444b8u" path="res://assets/customUI/loading.png" id="2_j7bor"]
+[ext_resource type="Texture2D" uid="uid://owjy0m0bcex0" path="res://assets/customUI/orange_bar.png" id="3_akyrb"]
+[ext_resource type="Texture2D" uid="uid://bubj1kbdokgyu" path="res://assets/customUI/white_bar.png" id="4_y8dbf"]
+
+[node name="loadingscreen" type="Control" unique_id=786792893]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0070022, 1.0070022)
+script = ExtResource("1_pexxm")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1441156965]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 0
+offset_left = -0.9930477
+offset_top = -1.9860935
+offset_right = 3455.0068
+offset_bottom = 1942.0139
+scale = Vector2(0.46461573, 0.46461573)
+texture = ExtResource("2_j7bor")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1221384376]
+layout_mode = 0
+offset_left = 427.00995
+offset_top = 729.88916
+offset_right = 2118.01
+offset_bottom = 852.88916
+scale = Vector2(0.42445523, 0.42445523)
+value = 2.0
+rounded = true
+allow_greater = true
+nine_patch_stretch = true
+stretch_margin_right = 10
+texture_under = ExtResource("3_akyrb")
+texture_progress = ExtResource("4_y8dbf")
