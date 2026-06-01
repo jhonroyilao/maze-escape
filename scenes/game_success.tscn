@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bbtdnb3ivesfp"]
 
-[ext_resource type="Script" uid="uid://jm1ai1ymxl4k" path="res://scripts/game_success.gd" id="1_j2man"]
+[ext_resource type="Script" path="res://scripts/game_success.gd" id="1_j2man"]
 [ext_resource type="Texture2D" uid="uid://bap4oxhqbx4el" path="res://assets/customUI/ESCAPE.png" id="1_uirum"]
 [ext_resource type="Texture2D" uid="uid://ljh455f1nyp3" path="res://assets/customUI/next_level.png" id="2_j2man"]
 
