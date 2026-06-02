@@ -310,7 +310,7 @@ func _on_body_exited(body):
 
 
 # =========================================================
-# A STAR
+# BUILD A STAR 
 # =========================================================
 func _build_astar():
 	maze_rect = tilemap.get_used_rect()
@@ -378,6 +378,97 @@ func _body_at_offset_overlaps_wall(offset: Vector2i, shape_center: Vector2, shap
 
 
 
+# =========================================================
+# ACTUAL A STAR ALGORITHM FUNCTION
+# =========================================================
+
+func _heuristic(a: Vector2i, b: Vector2i) -> float:
+	return abs(a.x - b.x) + abs(a.y - b.y)
+
+func _get_neighbors(cell: Vector2i) -> Array[Vector2i]:
+	var neighbors: Array[Vector2i] = []
+	var directions = [
+		Vector2i.RIGHT,
+		Vector2i.LEFT,
+		Vector2i.UP,
+		Vector2i.DOWN
+	]
+
+	for dir in directions:
+		var next = cell + dir
+
+		if not astar.is_in_boundsv(next):
+			continue
+
+		if astar.is_point_solid(next):
+			continue
+
+		neighbors.append(next)
+
+	return neighbors
+
+
+func _lowest_f_score(open_set: Array[Vector2i], f_score: Dictionary) -> Vector2i:
+	var best = open_set[0]
+	var best_score = f_score.get(best, INF)
+
+	for node in open_set:
+		var score = f_score.get(node, INF)
+
+		if score < best_score:
+			best_score = score
+			best = node
+
+	return best
+
+
+func _reconstruct_path(came_from: Dictionary, current: Vector2i) -> Array[Vector2i]:
+	var result: Array[Vector2i] = [current]
+
+	while came_from.has(current):
+		current = came_from[current]
+		result.push_front(current)
+
+	return result
+
+
+func _manual_astar(start: Vector2i, goal: Vector2i) -> Array[Vector2i]:
+
+	var open_set: Array[Vector2i] = [start]
+
+	var came_from := {}
+
+	var g_score := {}
+	var f_score := {}
+
+	g_score[start] = 0.0
+	f_score[start] = _heuristic(start, goal)
+
+	while not open_set.is_empty():
+
+		var current = _lowest_f_score(open_set, f_score)
+
+		if current == goal:
+			return _reconstruct_path(came_from, current)
+
+		open_set.erase(current)
+
+		for neighbor in _get_neighbors(current):
+
+			var tentative_g = g_score.get(current, INF) + 1.0
+
+			if tentative_g < g_score.get(neighbor, INF):
+
+				came_from[neighbor] = current
+				g_score[neighbor] = tentative_g
+				f_score[neighbor] = tentative_g + _heuristic(neighbor, goal)
+
+				if not open_set.has(neighbor):
+					open_set.append(neighbor)
+
+	return []
+	
+	
 #====================
 # BLOCK CAMP SA A*
 # ==================
@@ -445,8 +536,7 @@ func _set_path_to(world_target: Vector2):
 	var path_target_cell = to_cell
 	var id_path: Array[Vector2i] = []
 	if not astar.is_point_solid(to_cell):
-		id_path.assign(astar.get_id_path(from_cell, path_target_cell))
-
+		id_path = _manual_astar(from_cell, path_target_cell)
 	if id_path.size() < 2:
 		var reachable = _find_reachable_path_near_target(from_cell, to_cell)
 		if not reachable.is_empty():
@@ -504,7 +594,7 @@ func _find_reachable_path_near_target(from_cell: Vector2i, target_cell: Vector2i
 
 	for candidate in candidates:
 		var candidate_path: Array[Vector2i] = []
-		candidate_path.assign(astar.get_id_path(from_cell, candidate))
+		candidate_path = _manual_astar(from_cell, candidate)
 		if candidate_path.size() >= 2:
 			print("[DWELLER] Target blocked -> nearest reachable: ", candidate)
 			return [candidate, candidate_path]
@@ -764,7 +854,7 @@ func _generate_patrol_points(count: int):
 		if patrol_points.size() >= count:
 			break
 		checked += 1
-		var test = astar.get_id_path(origin, cell)
+		var test = _manual_astar(origin, cell)
 		if test.size() > 0:
 			patrol_points.append(tilemap.to_global(tilemap.map_to_local(cell)))
 		if checked >= patrol_candidate_limit:
