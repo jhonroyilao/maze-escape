@@ -83,6 +83,10 @@ func reset_progression():
 	current_level_index = 0
 
 
+func move_to_previous_level():
+	current_level_index = max(current_level_index - 1, 0)
+
+
 func advance_to_next_level() -> bool:
 	if current_level_index >= levels.size() - 1:
 		return false
@@ -100,3 +104,8 @@ func proceed_from_success():
 	else:
 		reset_progression()
 		get_tree().call_deferred("change_scene_to_file", "res://scenes/main_menu.tscn")
+
+
+func restart_from_game_over():
+	move_to_previous_level()
+	get_tree().call_deferred("change_scene_to_file", get_active_level()["maze_scene_path"])
