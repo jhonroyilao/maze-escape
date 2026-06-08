@@ -32,5 +32,8 @@ func _reset_level_progression():
 # PLAY AGAIN BUTTON
 # =========================================================
 func _on_play_again_pressed():
-	_reset_level_progression()
-	get_tree().change_scene_to_file("res://scenes/game0.tscn")
+	var level_manager = get_node_or_null("/root/LevelManager")
+	if level_manager and level_manager.has_method("restart_from_game_over"):
+		level_manager.restart_from_game_over()
+	else:
+		get_tree().change_scene_to_file("res://scenes/game0.tscn")
